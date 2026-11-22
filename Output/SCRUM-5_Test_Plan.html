@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Draft test plan for Jira issue SCRUM-5: Add Passkey and SSO Login Options to VWO Login Page.">
+  <title>SCRUM-5 Test Plan | VWO Login</title>
+  <style>
+    :root {
+      --ink: #1b2435;
+      --muted: #596579;
+      --brand: #5636c9;
+      --deep: #2f1e72;
+      --pale: #f1edff;
+      --line: #dce1ea;
+      --paper: #fff;
+      --canvas: #f4f6fb;
+      --red: #a52e3e;
+      --amber: #805500;
+      --green: #176b4d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--canvas);
+      color: var(--ink);
+      font: 14px/1.53 "Segoe UI", Arial, sans-serif;
+    }
+    .cover {
+      min-height: 480px;
+      padding: 62px max(7vw, 28px);
+      color: white;
+      background: linear-gradient(132deg, #26175e, #5233c2 67%, #8469e6);
+      display: flex;
+      align-items: center;
+    }
+    .cover-inner, main { width: min(1120px, 100%); margin: 0 auto; }
+    .brand-lockup { display: flex; align-items: center; gap: 12px; margin: 0 0 21px; font-size: 14px; font-weight: 700; letter-spacing: .03em; }
+    .brand-lockup img { width: 56px; height: 56px; object-fit: contain; padding: 2px; border-radius: 50%; background: white; }
+    .eyebrow {
+      color: #ddd5ff;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+    h1 { max-width: 760px; margin: 15px 0 10px; font-size: clamp(36px, 5vw, 52px); line-height: 1.08; }
+    .cover-subtitle { margin: 0 0 28px; color: #f1efff; font-size: 21px; }
+    .cover-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px 28px; max-width: 740px; font-size: 13px; }
+    .cover-meta span { padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,.25); }
+    .draft-stamp {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 8px 13px;
+      border: 1px solid rgba(255,255,255,.65);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .06em;
+    }
+    main { padding: 28px 24px 54px; }
+    section, .callout, .toc {
+      margin: 0 0 18px;
+      padding: 22px 25px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--paper);
+      box-shadow: 0 3px 14px rgba(27,35,57,.035);
+    }
+    h2 { margin: 0 0 13px; color: var(--deep); font-size: 22px; line-height: 1.25; }
+    h3 { margin: 17px 0 7px; color: var(--ink); font-size: 16px; }
+    p { margin: 7px 0 11px; }
+    ul, ol { padding-left: 22px; }
+    li { margin: 4px 0; }
+    a { color: var(--deep); }
+    .toc ul { display: flex; flex-wrap: wrap; gap: 6px 21px; margin: 8px 0 0; }
+    .callout { border-left: 4px solid var(--brand); }
+    .callout.warning { border-left-color: #d49416; background: #fffaf0; }
+    .callout.critical { border-left-color: var(--red); background: #fff6f6; }
+    .callout.review { border-left-color: var(--brand); background: var(--pale); }
+    .callout strong { color: var(--deep); }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .card { padding: 13px 15px; border: 1px solid var(--line); border-radius: 8px; background: #fcfcfe; }
+    .card h3 { margin: 0 0 5px; }
+    .card p:last-child { margin-bottom: 0; }
+    .table-wrap { width: 100%; overflow-x: auto; margin: 10px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { padding: 8px 9px; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: var(--pale); color: var(--deep); font-weight: 700; }
+    tbody tr:nth-child(even) { background: #fafbfe; }
+    .priority { white-space: nowrap; font-weight: 700; }
+    .p0 { color: var(--red); }
+    .p1 { color: var(--amber); }
+    .p2 { color: #41526f; }
+    .status { font-weight: 700; white-space: nowrap; }
+    .yes { color: var(--green); }
+    .ambiguous { color: var(--amber); }
+    .missing { color: var(--red); }
+    .small { color: var(--muted); font-size: 11px; }
+    .mono { font-family: Consolas, "Courier New", monospace; }
+    .footer { margin-top: 18px; color: var(--muted); font-size: 11px; text-align: center; }
+    @media (max-width: 680px) {
+      .cover { min-height: 390px; padding: 40px 24px; }
+      .cover-meta, .grid { grid-template-columns: 1fr; }
+      .brand-lockup img { width: 50px; height: 50px; }
+      main { padding: 16px 12px 35px; }
+      section, .callout, .toc { padding: 18px 16px; }
+    }
+    @media print {
+      @page { size: A4; margin: 14mm 13mm 16mm; }
+      body { background: white; font-size: 9.5pt; }
+      .cover {
+        min-height: 0;
+        height: 255mm;
+        margin: -14mm -13mm 0;
+        padding: 26mm 20mm;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+        break-after: page;
+      }
+      main { width: 100%; padding: 0; }
+      section, .callout, .toc { box-shadow: none; break-inside: auto; }
+      h2, h3 { break-after: avoid; }
+      tr, .card { break-inside: avoid; }
+      table { font-size: 8pt; }
+      th { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      a { color: inherit; text-decoration: none; }
+      .footer { break-before: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="cover">
+    <div class="cover-inner">
+      <div class="brand-lockup">
+        <img src="company-logo.webp" alt="The Testing Academy logo">
+        <span>The Testing Academy</span>
+      </div>
+      <p class="eyebrow">VWO · Quality Assurance · Jira Story</p>
+      <h1>Add Passkey and SSO Login Options to VWO Login Page</h1>
+      <p class="cover-subtitle">Test Plan · SCRUM-5</p>
+      <div class="cover-meta">
+        <span><strong>Project:</strong> QA Testing</span>
+        <span><strong>Issue type:</strong> Story</span>
+        <span><strong>Status:</strong> To Do</span>
+        <span><strong>Priority:</strong> Medium</span>
+        <span><strong>Reporter:</strong> Savita</span>
+        <span><strong>Assignee:</strong> Unassigned</span>
+        <span><strong>Created:</strong> 22 November 2026</span>
+        <span><strong>Updated:</strong> 22 November 2026</span>
+        <span><strong>Fix version:</strong> None specified</span>
+        <span><strong>Sprint:</strong> Not assigned</span>
+      </div>
+      <div class="draft-stamp">DRAFT — PENDING HUMAN REVIEW</div>
+    </div>
+  </header>
+
+  <main>
+    <nav class="toc" aria-label="Contents">
+      <strong>In this plan</strong>
+      <ul>
+        <li><a href="#scope">Scope &amp; objectives</a></li>
+        <li><a href="#gaps">Gaps &amp; questions</a></li>
+        <li><a href="#scenarios">Test scenarios</a></li>
+        <li><a href="#environment">Test data &amp; environment</a></li>
+        <li><a href="#risks">Risks &amp; assumptions</a></li>
+        <li><a href="#criteria">Entry &amp; exit</a></li>
+        <li><a href="#resources">Resources &amp; timeline</a></li>
+        <li><a href="#review">Human review gate</a></li>
+      </ul>
+    </nav>
+
+    <div class="callout critical">
+      <strong>Existing test status:</strong> Jira reports multiple automated runs as <strong>inconclusive</strong>, with all test cases blocked for button visibility, SSO success/failure, and passkey fallback. The blocker cause and the conditions needed to unblock testing are not stated. Treat these flows as unverified until rerun in a ready staging environment.
+    </div>
+
+    <section id="scope">
+      <h2>1. Scope &amp; objectives</h2>
+      <p><strong>Objective:</strong> verify that the two new login options are visible in the specified location; that eligible users can authenticate using the configured SSO or a registered passkey; and that error, fallback, compatibility, security, responsive, and accessibility behavior is acceptable before QA sign-off.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>In scope</h3>
+          <ul>
+            <li>“Sign in using SSO” and “Sign in with Passkey” buttons and their placement below “Sign in with Google.”</li>
+            <li>Successful and failed SSO authentication, including error handling.</li>
+            <li>Passkey login for users with a registered passkey and fallback guidance when none is available.</li>
+            <li>Unsupported browser/device behavior, responsive UI, accessibility, and compatibility with supported identity providers.</li>
+            <li>Verification that OAuth/SAML/WebAuthn security protocols are followed for the configured flow.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Out of scope (per ticket)</h3>
+          <ul>
+            <li>Passkey registration flow.</li>
+            <li>SSO provider configuration.</li>
+          </ul>
+          <p>Testing assumes providers and passkey test accounts are already configured and available in staging; this prerequisite requires confirmation.</p>
+        </div>
+      </div>
+      <h3>Requirements and Jira context</h3>
+      <p><strong>Description:</strong> Users can log in using “Sign in using SSO” and “Sign in with Passkey.” Both options appear below the existing “Sign in with Google” button and should provide a seamless, secure login experience.</p>
+      <p><strong>Acceptance criteria:</strong></p>
+      <ol>
+        <li>Both new login buttons are visible and placed below “Sign in with Google.”</li>
+        <li>SSO login authenticates users correctly and handles errors.</li>
+        <li>Passkey login authenticates users when registered; fallback guidance if no passkey is available.</li>
+        <li>Proper error messages for failed authentications and unsupported devices.</li>
+        <li>Compatibility with supported browsers/devices and identity providers.</li>
+        <li>Security protocols followed (OAuth/SAML/WebAuthn).</li>
+      </ol>
+      <p><strong>Jira-listed test scenarios:</strong> verify button visibility and position; validate successful and failed SSO login; validate passkey login and fallback behavior; check unsupported browsers/devices; test UI responsiveness and accessibility.</p>
+      <p><strong>Definition of Done:</strong> feature implemented and deployed to staging; all acceptance criteria fulfilled; QA sign-off completed; no high or critical defects; documentation updated.</p>
+      <p class="small"><strong>Other ticket metadata:</strong> components, labels, fix versions, sprint, linked issues, and attachments are not populated in the issue data. Resolution is unresolved. Estimate fields are not specified. Jira issue: <a href="https://savitaambekar27.atlassian.net/browse/SCRUM-5">SCRUM-5</a>.</p>
+    </section>
+
+    <section id="gaps">
+      <h2>2. Gaps &amp; questions for the author</h2>
+      <p>Checklist status: <span class="status yes">Present</span> · <span class="status ambiguous">Ambiguous / partial</span> · <span class="status missing">Missing</span>. Each ambiguous or missing area should be clarified or explicitly accepted before sign-off.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Checklist area</th><th>Status</th><th>Finding / question for the author</th></tr></thead>
+          <tbody>
+            <tr><td>User story / goal</td><td class="status yes">Present</td><td>Goal is to add SSO and passkey login entry points to the VWO login page.</td></tr>
+            <tr><td>Acceptance criteria</td><td class="status ambiguous">Ambiguous</td><td>“Authenticates correctly,” “handles errors,” “seamless,” and “proper error messages” lack observable outcomes. What exact success destination, error states, and approved user-facing messages are required?</td></tr>
+            <tr><td>Happy paths</td><td class="status ambiguous">Ambiguous</td><td>SSO protocol and passkey success are named, but account mapping, callback destination, and session outcome are not specified. What is the expected result for each configured provider?</td></tr>
+            <tr><td>Negative / error paths</td><td class="status ambiguous">Ambiguous</td><td>Which SSO failure, cancellation, timeout, provider outage, passkey cancellation, and no-credential states must be covered? What recovery action should each show?</td></tr>
+            <tr><td>Boundary / empty states</td><td class="status missing">Missing</td><td>No retry, repeated activation, unavailable-provider, or account-association limits are defined. Are there product-specific limits or lockout behaviors?</td></tr>
+            <tr><td>Workflow / state transitions</td><td class="status ambiguous">Ambiguous</td><td>Loading, cancel, retry, return-to-login, and transition-to-dashboard behavior is not described. Please confirm the expected flow states.</td></tr>
+            <tr><td>Test data</td><td class="status missing">Missing</td><td>Provide staging accounts with SSO access, registered passkey, and no registered passkey, plus any required account/provider mapping.</td></tr>
+            <tr><td>Environment / configuration</td><td class="status ambiguous">Ambiguous</td><td>Staging deployment is a DoD item, but its URL, build, feature flag, and provider/test-tenant configuration are not listed. Who supplies these?</td></tr>
+            <tr><td>Dependencies / setup</td><td class="status ambiguous">Ambiguous</td><td>OAuth/SAML providers and browser WebAuthn support are referenced, but supported providers, integration owners, and staging readiness are unspecified.</td></tr>
+            <tr><td>Performance / load</td><td class="status missing">Missing</td><td>No response-time or concurrency target is stated for the new authentication flows. Is performance testing required for this story?</td></tr>
+            <tr><td>Security / authorization</td><td class="status ambiguous">Ambiguous</td><td>Protocols are named, but expected security review criteria, account eligibility, and session behavior are not defined. Which approved security requirements apply?</td></tr>
+            <tr><td>Accessibility</td><td class="status ambiguous">Ambiguous</td><td>Accessibility is mentioned without a conformance level or expected keyboard/screen-reader behavior. Is WCAG 2.1 AA the acceptance target?</td></tr>
+            <tr><td>Internationalization</td><td class="status missing">Missing</td><td>No locale, translated strings, or right-to-left behavior is specified. Is localization in scope?</td></tr>
+            <tr><td>Audit / observability</td><td class="status missing">Missing</td><td>Event logging, analytics, and support diagnostics for success/failure are not described. Are these required for the release?</td></tr>
+            <tr><td>Regression / compatibility</td><td class="status ambiguous">Ambiguous</td><td>Google is the placement reference, but supported browser/device versions and the regression set for existing login options are not given. Confirm the browser matrix and existing flows to protect.</td></tr>
+            <tr><td>Rollback / feature flag</td><td class="status missing">Missing</td><td>No rollout, flag, or rollback behavior is specified. Is there a disable/rollback plan if an identity integration fails?</td></tr>
+            <tr><td>Clarity / design</td><td class="status ambiguous">Ambiguous</td><td>Button labels are stated, but exact visual design, order, responsive layout, and approved mockup are not linked. Please provide the final design reference.</td></tr>
+            <tr><td>Schedule / ownership</td><td class="status missing">Missing</td><td>No sprint, fix version, estimate, target date, or assigned owner is listed. Who owns staging readiness and test sign-off?</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="scenarios">
+      <h2>3. Test scenarios</h2>
+      <p>Priorities are proposed risk-based priorities, not values supplied by Jira. Scenarios map directly to an acceptance criterion (AC) or are explicitly marked as a gap-derived case. These are planning scenarios, not executable test cases.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Priority</th><th>Type</th><th>Scenario / expected outcome</th><th>Maps to</th></tr></thead>
+          <tbody>
+            <tr><td>TS-01</td><td class="priority p1">P1</td><td>Positive / UI</td><td>Open the login page on supported desktop and mobile layouts; verify both new buttons are visible, their labels match the ticket, and each is positioned below “Sign in with Google.”</td><td>AC1</td></tr>
+            <tr><td>TS-02</td><td class="priority p1">P1</td><td>Positive / UI</td><td>Activate each new option using pointer and keyboard; verify the correct SSO or passkey flow starts and loading/focus feedback does not obscure the login page.</td><td>AC1; gap: state transitions</td></tr>
+            <tr><td>TS-03</td><td class="priority p0">P0</td><td>Positive / SSO</td><td>Authenticate with a valid staging SSO account through each configured provider; verify successful return to the expected authenticated destination and correct account identity.</td><td>AC2; AC5; gap: provider list and destination</td></tr>
+            <tr><td>TS-04</td><td class="priority p0">P0</td><td>Negative / SSO</td><td>Use a staging SSO account that is denied or fails authentication; verify access is not granted and the approved error and recovery guidance appear.</td><td>AC2; AC4</td></tr>
+            <tr><td>TS-05</td><td class="priority p1">P1</td><td>Negative / SSO</td><td>Cancel the SSO flow or simulate an approved provider/network error; verify the user returns to a usable login state and can retry without a false success.</td><td>AC2; gap: cancellation / outage handling</td></tr>
+            <tr><td>TS-06</td><td class="priority p0">P0</td><td>Positive / Passkey</td><td>Use a supported device/browser and an account with an already registered passkey; complete authentication and verify the expected authenticated destination.</td><td>AC3; AC5</td></tr>
+            <tr><td>TS-07</td><td class="priority p0">P0</td><td>Negative / Passkey</td><td>Use an account/device with no available registered passkey; verify the documented fallback guidance appears and the user is not authenticated by this attempt.</td><td>AC3</td></tr>
+            <tr><td>TS-08</td><td class="priority p1">P1</td><td>Negative / Passkey</td><td>Open passkey sign-in on an unsupported browser/device; verify a clear supported error/guidance and an available alternative login path.</td><td>AC4; AC5</td></tr>
+            <tr><td>TS-09</td><td class="priority p1">P1</td><td>Negative / Passkey</td><td>Cancel or dismiss the browser passkey prompt; verify no session is created, the user receives understandable guidance, and retry/alternative sign-in remains available.</td><td>Gap: error and state transitions</td></tr>
+            <tr><td>TS-10</td><td class="priority p1">P1</td><td>Negative / SSO</td><td>Test an SSO response that is invalid for the configured staging integration using approved test fixtures; verify authentication is rejected and a safe, actionable error is shown.</td><td>AC2; AC6</td></tr>
+            <tr><td>TS-11</td><td class="priority p1">P1</td><td>Negative / Passkey</td><td>Test a failed passkey assertion using an approved test account; verify failure leaves the user unauthenticated and produces a usable retry or fallback path.</td><td>AC3; AC4; AC6</td></tr>
+            <tr><td>TS-12</td><td class="priority p0">P0</td><td>Security / Integration</td><td>With the security/integration owner, verify the deployed flow uses the configured OAuth/SAML and WebAuthn behavior, rejects unsuccessful authentication, and does not create an authenticated session on error.</td><td>AC2; AC3; AC6</td></tr>
+            <tr><td>TS-13</td><td class="priority p1">P1</td><td>Compatibility</td><td>Run the agreed supported browser/device and identity-provider matrix for button rendering, SSO, passkey, and error states; record unsupported combinations and expected guidance.</td><td>AC4; AC5; gap: matrix</td></tr>
+            <tr><td>TS-14</td><td class="priority p1">P1</td><td>Accessibility</td><td>Verify both controls have accessible names, are keyboard operable with visible focus, and communicate loading and errors to assistive technology; confirm approved accessibility target.</td><td>Jira test scenario; gap: standard</td></tr>
+            <tr><td>TS-15</td><td class="priority p1">P1</td><td>Responsive / UI</td><td>At agreed phone, tablet, and desktop viewports, verify the buttons remain visible, ordered below Google, readable, and operable without overlap or horizontal clipping.</td><td>Jira test scenario; AC1; gap: viewports</td></tr>
+            <tr><td>TS-16</td><td class="priority p0">P0</td><td>Regression</td><td>Verify the existing “Sign in with Google” control remains present and works after the new options are added; verify any other existing login path agreed for regression is unaffected.</td><td>AC1; gap: regression scope</td></tr>
+            <tr><td>TS-17</td><td class="priority p1">P1</td><td>Recovery / State</td><td>After an SSO/passkey failure, verify the user can choose another available sign-in method and that repeated activation does not produce conflicting or duplicate authenticated states.</td><td>AC2-AC4; gap: recovery behavior</td></tr>
+            <tr><td>TS-18</td><td class="priority p1">P1</td><td>Observability</td><td>If product analytics/audit events are required, verify agreed success/failure events are recorded without exposing authentication secrets or sensitive assertion material.</td><td>Gap: logging / observability</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small"><strong>Priority key:</strong> P0 = core authentication/security release blocker; P1 = important compatibility, error, usability, or regression coverage; P2 = no P2 scenario assigned until lower-risk optional scope is confirmed. The ticket defines no priority scheme.</p>
+    </section>
+
+    <section id="environment">
+      <h2>4. Test data &amp; environment</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Environment</h3>
+          <ul>
+            <li>Target: staging, as stated in the Definition of Done.</li>
+            <li>Staging URL, build/version, feature flag, and deployment window: TBD.</li>
+            <li>SSO test provider(s), test tenant, callback configuration, and WebAuthn origin/RP configuration: TBD and must be preconfigured (provider configuration itself is out of scope).</li>
+            <li>Do not use production for unapproved authentication/security testing.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Test data</h3>
+          <ul>
+            <li>Active SSO-enabled user that maps to a VWO account.</li>
+            <li>SSO-denied or unsuccessful test user, plus approved provider failure/cancel path.</li>
+            <li>Active user with an already registered passkey.</li>
+            <li>Account with no available passkey and a supported alternative sign-in method.</li>
+            <li>Supported and unsupported device/browser combinations, identified by product.</li>
+          </ul>
+        </div>
+      </div>
+      <h3>Browser / device matrix</h3>
+      <p>The ticket requires compatibility with supported browsers/devices but does not name them or versions. Product/engineering must provide the supported matrix. Include desktop and mobile platforms and identity providers in that approved matrix; do not treat an unlisted platform as supported by assumption.</p>
+      <h3>Roles and permissions</h3>
+      <p>Test user eligibility and account-to-identity mapping are TBD. Supply least-privilege test accounts for each SSO/passkey state. No production user credentials or personal data should be used in evidence.</p>
+    </section>
+
+    <section id="risks">
+      <h2>5. Risks &amp; assumptions</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Risk / assumption</th><th>Impact</th><th>Mitigation / action</th></tr></thead>
+          <tbody>
+            <tr><td>Previous automated runs are blocked and inconclusive.</td><td>Core feature paths have no reliable pass evidence.</td><td>Identify the blocker cause, make staging/providers/accounts ready, then rerun visibility, SSO success/failure, and passkey fallback first.</td></tr>
+            <tr><td>SSO providers and accounts are assumed preconfigured because configuration is out of scope.</td><td>Flows may be untestable or appear broken due to missing setup.</td><td>Assign an integration owner and confirm ready test tenants, accounts, and expected provider list before execution.</td></tr>
+            <tr><td>Passkey is assumed already registered for the positive case; registration is excluded.</td><td>No positive passkey test can be executed without a prepared credential.</td><td>Provide a test account/device with a registered passkey before test start.</td></tr>
+            <tr><td>Supported browser/device list and expected fallback copy are unspecified.</td><td>Compatibility and error behavior cannot be assessed consistently.</td><td>Confirm the matrix and approved user messages before sign-off.</td></tr>
+            <tr><td>Authentication changes can affect existing login and account routing.</td><td>Regression could block existing users or create incorrect account access.</td><td>Run the core login regression agreed with product and verify failures do not produce authenticated sessions.</td></tr>
+            <tr><td>Security criteria are described only by protocol names.</td><td>“Secure” may be interpreted inconsistently across teams.</td><td>Have the security/integration owner approve protocol-level acceptance criteria and staging verification before release.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Assumptions pending confirmation:</strong> a staging build will be available; the identity providers are already configured; passkey registration can be done outside this story to seed a test account; existing Google login remains a regression path. No assumption is considered approved until the human review gate.</p>
+    </section>
+
+    <section id="criteria">
+      <h2>6. Entry &amp; exit criteria</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Entry criteria</h3>
+          <ul>
+            <li>Feature is deployed to an identified staging build and the environment is reachable.</li>
+            <li>SSO providers are preconfigured and test tenants/accounts are available.</li>
+            <li>Passkey-positive and no-passkey test account states are prepared.</li>
+            <li>Supported browser/device matrix, expected messages, and fallback destinations are approved.</li>
+            <li>Test scenarios and open assumptions are reviewed; access and test data are authorized.</li>
+            <li>Previous blocked test causes are understood or explicitly tracked as execution blockers.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Exit criteria</h3>
+          <ul>
+            <li>All six ticket acceptance criteria have recorded test evidence or an agreed, documented exception.</li>
+            <li>All P0 scenarios pass; no open high or critical defects, matching the Jira Definition of Done.</li>
+            <li>Blocked scenarios are unblocked and rerun, or their residual risk is explicitly accepted by the QA/product owner.</li>
+            <li>Compatibility, responsive, accessibility, and security results are reviewed against confirmed targets.</li>
+            <li>Defects are logged, fixes retested, required regression passes, and documentation is updated.</li>
+            <li>QA sign-off is recorded by the authorized owner.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="resources">
+      <h2>7. Resource allocation</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Role</th><th>Responsibility</th><th>Owner / allocation</th></tr></thead>
+          <tbody>
+            <tr><td>QA / test owner</td><td>Confirm coverage, run scenarios, report blockers/defects, retest, and prepare QA sign-off.</td><td>TBD</td></tr>
+            <tr><td>Product / ticket author</td><td>Clarify expected behavior, supported matrix, acceptance criteria, fallback guidance, and scope.</td><td>TBD</td></tr>
+            <tr><td>Engineering owner</td><td>Provide build/environment, support triage, and resolve implementation defects.</td><td>TBD</td></tr>
+            <tr><td>SSO / identity owner</td><td>Confirm preconfigured provider/test tenant and assist with integration test readiness.</td><td>TBD</td></tr>
+            <tr><td>Security / accessibility reviewer</td><td>Confirm applicable protocol and accessibility acceptance expectations; review evidence as needed.</td><td>TBD</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h2>8. Timelines &amp; sprint details</h2>
+      <p>Jira has no sprint or fix version assigned; target dates, estimate, and resource capacity are not provided. No calendar schedule can be set without inventing dates.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Phase</th><th>Planned output</th><th>Timing / owner</th></tr></thead>
+          <tbody>
+            <tr><td>Clarify gaps and staging prerequisites</td><td>Approved answers, test data, provider readiness, browser matrix</td><td>TBD</td></tr>
+            <tr><td>Smoke and core authentication</td><td>Button placement, SSO success/failure, passkey success/fallback</td><td>TBD</td></tr>
+            <tr><td>Compatibility, accessibility, security, regression</td><td>Matrix results, defect/retest record, regression evidence</td><td>TBD</td></tr>
+            <tr><td>QA closure</td><td>Test summary, residual risks, documented QA sign-off</td><td>TBD</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="review">
+      <h2>9. Human review gate</h2>
+      <div class="callout review">
+        <strong>This is a draft test plan and is not approved.</strong> Review the scenarios and clarify the blocking questions before test cases or automation are created. Jira reports the issue as To Do and the latest automated results as inconclusive/blocked.
+      </div>
+      <h3>Assumptions made</h3>
+      <ul>
+        <li>Testing will use staging, consistent with the Jira Definition of Done.</li>
+        <li>SSO provider configuration and passkey registration are provided before test execution because they are explicitly out of scope.</li>
+        <li>The two methods must leave the user unauthenticated when authentication fails.</li>
+        <li>Existing Google sign-in should remain available because the acceptance criteria use it as the layout anchor.</li>
+      </ul>
+      <h3>Could not confirm / sign-off blockers</h3>
+      <ul>
+        <li>Cause of all-blocked automated runs and staging URL/build/feature readiness.</li>
+        <li>Supported SSO providers and browser/device/version matrix.</li>
+        <li>Exact callback/dashboard destination, account mapping, failure states, recovery guidance, and approved error copy.</li>
+        <li>Availability of a registered-passkey user/device and a no-passkey account.</li>
+        <li>Required accessibility conformance, security review criteria, performance target, analytics/audit requirements, and rollback plan.</li>
+        <li>Assigned sprint/fix version, schedule, and responsible QA/engineering/identity owners.</li>
+      </ul>
+      <p><strong>Approval:</strong> QA owner / product owner to confirm or edit the plan and resolve the questions above before proceeding to detailed test cases or automation.</p>
+    </section>
+
+    <p class="footer">SCRUM-5 · VWO Login · Test Plan · Draft for human review · Source: Jira issue and supplied test-plan skill</p>
+  </main>
+</body>
+</html>
